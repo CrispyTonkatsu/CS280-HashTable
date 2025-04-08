@@ -1,0 +1,4 @@
+build/
+nohup.out
+*.zip
+gnu.exe
