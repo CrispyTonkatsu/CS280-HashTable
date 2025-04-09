@@ -1,0 +1,10 @@
+
+==================== TestALot ====================
+
+Creating table:
+Primary hash function: Simple Hash
+Secondary hash function: None (Linear probing)
+Initial size: 13
+Max load factor: 0.85
+Growth factor: 1.5
+

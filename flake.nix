@@ -27,7 +27,6 @@
             cmake
             python3
             valgrind
-            gcc
             xxd
           ];
 

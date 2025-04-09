@@ -7,6 +7,10 @@
  * @brief Implementation of a basic hash table
  */
 
+#pragma once
+
+#include <iostream>
+#include <ostream>
 #define OAHASHTABLE_CPP
 
 #ifndef OAHASHTABLEH
@@ -16,11 +20,15 @@
 template<typename T>
 OAHashTable<T>::OAHashTable(const OAHTConfig& Config):
     config(Config),
-    slots(new OAHTSlot[config.InitialTableSize_]),
+    slots(new OAHTSlot[Config.InitialTableSize_]),
     first_hash_function(config.PrimaryHashFunc_),
     second_hash_function(config.SecondaryHashFunc_),
     delete_function(config.FreeProc_),
-    stats() {}
+    stats() {
+  stats.TableSize_ = config.InitialTableSize_;
+  stats.PrimaryHashFunc_ = first_hash_function;
+  stats.SecondaryHashFunc_ = second_hash_function;
+}
 
 template<typename T>
 OAHashTable<T>::~OAHashTable() {
@@ -29,7 +37,12 @@ OAHashTable<T>::~OAHashTable() {
 
 template<typename T>
 auto OAHashTable<T>::insert(const char* Key, const T& Data) -> void {
+  // NOTE: Expand table if needed
+
   // TODO: Impelement insertion
+  size_t index = first_hash_function(Key, stats.TableSize_);
+  std::cout << index << std::endl;
+  stats.Count_++;
 }
 
 template<typename T>
@@ -54,8 +67,7 @@ auto OAHashTable<T>::GetStats() const -> OAHTStats {
 
 template<typename T>
 auto OAHashTable<T>::GetTable() const -> const OAHTSlot* {
-  // TODO: Table getter
-  return nullptr;
+  return slots;
 }
 
 template<typename T>

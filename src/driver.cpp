@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <ostream>
 using namespace std;
 
 #include "OAHashTable.h"
@@ -342,6 +343,9 @@ void TestALot(HashData* phd, HashData* shd) {
     }
     DumpTable<T>(ht);
     DumpStats<T>(ht);
+
+    // NOTE: Current part of test
+    return;
 
     Person* person;
     const char* key = "";

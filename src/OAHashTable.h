@@ -7,6 +7,8 @@
  * @brief Implementation of a basic hash table
  */
 
+#pragma once
+
 //---------------------------------------------------------------------------
 #ifndef OAHASHTABLEH
 #define OAHASHTABLEH
