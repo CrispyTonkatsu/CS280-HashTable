@@ -9,11 +9,9 @@
 
 #pragma once
 
-#include <cstddef>
+#include <cmath>
 #include <cstring>
-#include <iostream>
-#include <ostream>
-#include <sys/types.h>
+
 #define OAHASHTABLE_CPP
 
 #ifndef OAHASHTABLEH
@@ -32,7 +30,7 @@ OAHashTable<T>::OAHashTable(const OAHTConfig& Config):
   stats.PrimaryHashFunc_ = first_hash_function;
   stats.SecondaryHashFunc_ = second_hash_function;
 
-  InitTable();
+  init_table();
 }
 
 template<typename T>
@@ -42,22 +40,24 @@ OAHashTable<T>::~OAHashTable() {
 
 template<typename T>
 auto OAHashTable<T>::insert(const char* Key, const T& Data) -> void {
+  try_grow_table();
 
-  // NOTE: Expand table if needed
-
-  // TODO: Impelement insertion
   std::size_t index = first_hash_function(Key, stats.TableSize_);
-  OAHTSlot* slot = &slots[index];
+  OAHTSlot* slot = nullptr;
 
   for (std::size_t i = 0; i < stats.TableSize_; i++) {
-    std::size_t wrapped_index = (index + i) % stats.TableSize_;
-    stats.Probes_++;
+    slot = &get_slot_mut(index + i);
 
-    if (slots[wrapped_index].State == OAHashTable::OAHTSlot::UNOCCUPIED) {
-      slot = &slots[wrapped_index];
-      slot->probes = i;
+    if (slot->State == OAHashTable::OAHTSlot::UNOCCUPIED) {
       break;
     }
+  }
+
+  if (slot == nullptr) {
+    throw OAHashTableException(
+      OAHashTableException::E_NO_MEMORY,
+      "There is not slot available."
+    );
   }
 
   slot->State = OAHashTable::OAHTSlot::OCCUPIED;
@@ -74,13 +74,14 @@ auto OAHashTable<T>::remove(const char* Key) -> void {
 
 template<typename T>
 auto OAHashTable<T>::find(const char* Key) const -> const T& {
-  // TODO: Impelement search
-
   std::size_t index = first_hash_function(Key, stats.TableSize_);
 
   for (std::size_t i = 0; i < stats.TableSize_; i++) {
-    std::size_t wrapped_index = (index + i) % stats.TableSize_;
-    OAHTSlot& slot = slots[wrapped_index];
+    const OAHTSlot& slot = get_slot(index + i);
+
+    if (slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
+      break;
+    }
 
     if (strcmp(slot.Key, Key) == 0) {
       return slot.Data;
@@ -89,7 +90,7 @@ auto OAHashTable<T>::find(const char* Key) const -> const T& {
 
   throw OAHashTableException(
     OAHashTableException::E_ITEM_NOT_FOUND,
-    "The item is not in the table"
+    "Item not found in table."
   );
 }
 
@@ -109,7 +110,7 @@ auto OAHashTable<T>::GetTable() const -> const OAHTSlot* {
 }
 
 template<typename T>
-auto OAHashTable<T>::InitTable() -> void {
+auto OAHashTable<T>::init_table() -> void {
   for (std::size_t i = 0; i < stats.TableSize_; i++) {
     slots[i].Key[0] = '\0';
     slots[i].Data = T();
@@ -119,13 +120,58 @@ auto OAHashTable<T>::InitTable() -> void {
 }
 
 template<typename T>
-auto OAHashTable<T>::GrowTable() -> void {
-  // TODO: Table extending
+auto OAHashTable<T>::try_grow_table() -> void {
+  const float load_factor =
+    static_cast<float>(stats.Count_ + 1) / static_cast<float>(stats.TableSize_);
+
+  if (load_factor < config.MaxLoadFactor_) {
+    return;
+  }
+
+  double new_factor = std::ceil(stats.TableSize_ * config.GrowthFactor_);
+  unsigned new_size = GetClosestPrime(static_cast<unsigned>(new_factor));
+
+  size_t old_size = stats.TableSize_;
+  stats.TableSize_ = new_size;
+  stats.Count_ = 0;
+
+  OAHTSlot* old_slots = slots;
+  slots = new OAHTSlot[new_size];
+
+  for (std::size_t i = 0; i < old_size; i++) {
+    if (old_slots[i].State == OAHashTable::OAHTSlot::OCCUPIED) {
+      insert(old_slots[i].Key, old_slots[i].Data);
+    }
+  }
+
+  stats.Expansions_++;
 }
 
 template<typename T>
-auto OAHashTable<T>::IndexOf(const char* Key, OAHTSlot*& Slot) const -> int {
+auto OAHashTable<T>::index_of(const char* Key, OAHTSlot*& Slot) const -> int {
   // TODO: Table indexing
+}
+
+template<typename T>
+auto OAHashTable<T>::get_slot(std::size_t index) const -> const OAHTSlot& {
+  std::size_t wrapped_index = index % stats.TableSize_;
+  OAHTSlot& slot = slots[wrapped_index];
+
+  slot.probes++;
+  stats.Probes_++;
+
+  return slot;
+}
+
+template<typename T>
+auto OAHashTable<T>::get_slot_mut(std::size_t index) -> OAHTSlot& {
+  std::size_t wrapped_index = index % stats.TableSize_;
+  OAHTSlot& slot = slots[wrapped_index];
+
+  slot.probes++;
+  stats.Probes_++;
+
+  return slot;
 }
 
 // Stats stuff

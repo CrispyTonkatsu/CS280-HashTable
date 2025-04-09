@@ -421,9 +421,6 @@ void TestALot(HashData* phd, HashData* shd) {
 
     DumpStats<T>(ht);
 
-    // NOTE: Current progress
-    return;
-
     // Grow the table by inserting some items
     for (unsigned j = size; j < size + 3; j++) {
       Person* person = PersonRecs[j];
@@ -468,6 +465,9 @@ void TestALot(HashData* phd, HashData* shd) {
            << endl;
     }
     DumpStats<T>(ht);
+
+    // NOTE: Current Progress
+    return;
 
     // Clear the table
     ht.clear();

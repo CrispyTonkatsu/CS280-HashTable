@@ -10,11 +10,12 @@
 #pragma once
 
 //---------------------------------------------------------------------------
+#include <cstddef>
 #ifndef OAHASHTABLEH
-#define OAHASHTABLEH
-//---------------------------------------------------------------------------
-#include <string>
-#include "Support.h"
+  #define OAHASHTABLEH
+  //---------------------------------------------------------------------------
+  #include <string>
+  #include "Support.h"
 
 /*!
 client-provided hash function: takes a key and table size,
@@ -153,18 +154,22 @@ public:
 private: // Some suggestions (You don't have to use any of this.)
 
   // Initialize the table after an allocation
-  void InitTable();
+  void init_table();
 
   // Expands the table when the load factor reaches a certain point
   // (greater than MaxLoadFactor) Grows the table by GrowthFactor,
   // making sure the new size is prime by calling GetClosestPrime
-  void GrowTable();
+  void try_grow_table();
 
   // Workhorse method to locate an item (if it exists)
   // Returns the index of the item in the table
   // Sets Slot to point to the slot in the table where it belongs
   // Returns -1 if it's not in the table
-  int IndexOf(const char* Key, OAHTSlot*& Slot) const;
+  int index_of(const char* Key, OAHTSlot*& Slot) const;
+
+  const OAHTSlot& get_slot(std::size_t index) const;
+
+  OAHTSlot& get_slot_mut(std::size_t index);
 
   OAHTConfig config{};
 
@@ -174,11 +179,11 @@ private: // Some suggestions (You don't have to use any of this.)
   HASHFUNC second_hash_function{nullptr};
   FREEPROC delete_function{nullptr};
 
-  OAHTStats stats{};
+  mutable OAHTStats stats{};
 };
 
-#ifndef OAHASHTABLE_CPP
-  #include "OAHashTable.cpp"
-#endif
+  #ifndef OAHASHTABLE_CPP
+    #include "OAHashTable.cpp"
+  #endif
 
 #endif
