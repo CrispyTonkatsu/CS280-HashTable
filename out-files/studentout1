@@ -41,7 +41,5 @@ Slot:  11, Key: *** Empty ***
 Slot:  12, Key: *** Empty ***
 Number of probes: 0
 Number of expansions: 0
-Items: 0, TableSize: 13
-Load factor: 0
-
-Finding key: 101001 (5)
+Items: 10, TableSize: 13
+Load factor: 0.769

@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstring>
 #include <iostream>
 #include <ostream>
 #define OAHASHTABLE_CPP
@@ -28,6 +30,8 @@ OAHashTable<T>::OAHashTable(const OAHTConfig& Config):
   stats.TableSize_ = config.InitialTableSize_;
   stats.PrimaryHashFunc_ = first_hash_function;
   stats.SecondaryHashFunc_ = second_hash_function;
+
+  InitTable();
 }
 
 template<typename T>
@@ -37,11 +41,29 @@ OAHashTable<T>::~OAHashTable() {
 
 template<typename T>
 auto OAHashTable<T>::insert(const char* Key, const T& Data) -> void {
+
   // NOTE: Expand table if needed
 
   // TODO: Impelement insertion
-  size_t index = first_hash_function(Key, stats.TableSize_);
-  std::cout << index << std::endl;
+  std::size_t index = first_hash_function(Key, stats.TableSize_);
+  OAHTSlot* slot = &slots[index];
+
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    std::size_t wrapped_index = (index + i) % stats.TableSize_;
+    stats.Probes_++;
+
+    if (slots[wrapped_index].State == OAHashTable::OAHTSlot::UNOCCUPIED) {
+      slot = &slots[wrapped_index];
+      slot->probes = i;
+      break;
+    }
+
+  }
+
+  slot->State = OAHashTable::OAHTSlot::OCCUPIED;
+  strcpy(slot->Key, Key);
+  slot->Data = Data;
+
   stats.Count_++;
 }
 
@@ -72,7 +94,12 @@ auto OAHashTable<T>::GetTable() const -> const OAHTSlot* {
 
 template<typename T>
 auto OAHashTable<T>::InitTable() -> void {
-  // TODO: Table initialization
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    slots[i].Key[0] = '\0';
+    slots[i].Data = T();
+    slots[i].State = OAHashTable::OAHTSlot::UNOCCUPIED;
+    slots[i].probes = 0;
+  }
 }
 
 template<typename T>
