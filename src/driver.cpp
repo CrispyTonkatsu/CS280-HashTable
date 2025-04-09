@@ -344,9 +344,6 @@ void TestALot(HashData* phd, HashData* shd) {
     DumpTable<T>(ht);
     DumpStats<T>(ht);
 
-    // NOTE: Current part of test
-    return;
-
     Person* person;
     const char* key = "";
 
@@ -423,6 +420,9 @@ void TestALot(HashData* phd, HashData* shd) {
     }
 
     DumpStats<T>(ht);
+
+    // NOTE: Current progress
+    return;
 
     // Grow the table by inserting some items
     for (unsigned j = size; j < size + 3; j++) {

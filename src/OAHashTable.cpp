@@ -13,6 +13,7 @@
 #include <cstring>
 #include <iostream>
 #include <ostream>
+#include <sys/types.h>
 #define OAHASHTABLE_CPP
 
 #ifndef OAHASHTABLEH
@@ -57,7 +58,6 @@ auto OAHashTable<T>::insert(const char* Key, const T& Data) -> void {
       slot->probes = i;
       break;
     }
-
   }
 
   slot->State = OAHashTable::OAHTSlot::OCCUPIED;
@@ -75,6 +75,22 @@ auto OAHashTable<T>::remove(const char* Key) -> void {
 template<typename T>
 auto OAHashTable<T>::find(const char* Key) const -> const T& {
   // TODO: Impelement search
+
+  std::size_t index = first_hash_function(Key, stats.TableSize_);
+
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    std::size_t wrapped_index = (index + i) % stats.TableSize_;
+    OAHTSlot& slot = slots[wrapped_index];
+
+    if (strcmp(slot.Key, Key) == 0) {
+      return slot.Data;
+    }
+  }
+
+  throw OAHashTableException(
+    OAHashTableException::E_ITEM_NOT_FOUND,
+    "The item is not in the table"
+  );
 }
 
 template<typename T>

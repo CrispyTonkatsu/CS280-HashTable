@@ -26,20 +26,48 @@ Number of expansions: 0
 Items: 0, TableSize: 13
 Load factor: 0
 
-Slot:   0, Key: *** Empty ***
-Slot:   1, Key: *** Empty ***
+Slot:   0, Key: 109001 (0)
+Slot:   1, Key: 110001 (5)
 Slot:   2, Key: *** Empty ***
 Slot:   3, Key: *** Empty ***
 Slot:   4, Key: *** Empty ***
-Slot:   5, Key: *** Empty ***
-Slot:   6, Key: *** Empty ***
-Slot:   7, Key: *** Empty ***
-Slot:   8, Key: *** Empty ***
-Slot:   9, Key: *** Empty ***
-Slot:  10, Key: *** Empty ***
-Slot:  11, Key: *** Empty ***
-Slot:  12, Key: *** Empty ***
-Number of probes: 0
+Slot:   5, Key: 101001 (5)
+Slot:   6, Key: 102001 (6)
+Slot:   7, Key: 103001 (7)
+Slot:   8, Key: 104001 (8)
+Slot:   9, Key: 105001 (9)
+Slot:  10, Key: 106001 (10)
+Slot:  11, Key: 107001 (11)
+Slot:  12, Key: 108001 (12)
+Number of probes: 19
+Number of expansions: 0
+Items: 10, TableSize: 13
+Load factor: 0.769
+
+Finding key: 101001 (5)
+Key:   101001, Name:        Faith,          Ian    Salary:  80000, Years: 10
+Number of probes: 19
+Number of expansions: 0
+Items: 10, TableSize: 13
+Load factor: 0.769
+
+Finding key: 103001 (7)
+Key:   103001, Name:       Savage,          Viv    Salary:  50000, Years:  4
+Number of probes: 19
+Number of expansions: 0
+Items: 10, TableSize: 13
+Load factor: 0.769
+
+Finding key: 110001 (5)
+Key:   101001, Name:        Faith,          Ian    Salary:  80000, Years: 10
+Number of probes: 19
+Number of expansions: 0
+Items: 10, TableSize: 13
+Load factor: 0.769
+
+Finding key: 123456 (10)
+Key:   106001, Name:       Smalls,        Derek    Salary:  80000, Years: 10
+Number of probes: 19
 Number of expansions: 0
 Items: 10, TableSize: 13
 Load factor: 0.769
