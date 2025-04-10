@@ -12,6 +12,8 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
+#include <iostream>
+#include <ostream>
 #include <vector>
 
 #define OAHASHTABLE_CPP
@@ -45,31 +47,7 @@ OAHashTable<T>::~OAHashTable() {
 
 template<typename T>
 auto OAHashTable<T>::insert(const char* Key, const T& Data) -> void {
-  try_grow_table();
-
-  std::size_t index = first_hash_function(Key, stats.TableSize_);
-  OAHTSlot* slot = nullptr;
-
-  for (std::size_t i = 0; i < stats.TableSize_; i++) {
-    slot = &get_slot_mut(index + i);
-
-    if (slot->State == OAHashTable::OAHTSlot::UNOCCUPIED) {
-      break;
-    }
-  }
-
-  if (slot == nullptr) {
-    throw OAHashTableException(
-      OAHashTableException::E_NO_MEMORY,
-      "There is not slot available."
-    );
-  }
-
-  slot->State = OAHashTable::OAHTSlot::OCCUPIED;
-  strcpy(slot->Key, Key);
-  slot->Data = Data;
-
-  stats.Count_++;
+  insert_inner(Key, Data);
 }
 
 template<typename T>
@@ -108,7 +86,7 @@ auto OAHashTable<T>::find(const char* Key) const -> const T& {
 template<typename T>
 auto OAHashTable<T>::clear() -> void {
   for (std::size_t i = 0; i < stats.TableSize_; i++) {
-    delete_slot(get_slot_mut(i));
+    delete_slot(get_slot_mut(i, false));
   }
 }
 
@@ -162,6 +140,36 @@ auto OAHashTable<T>::try_grow_table() -> void {
 }
 
 template<typename T>
+auto OAHashTable<T>::insert_inner(const char* Key, const T& Data, bool probe)
+  -> void {
+  try_grow_table();
+
+  std::size_t index = first_hash_function(Key, stats.TableSize_);
+  OAHTSlot* slot = nullptr;
+
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    slot = &get_slot_mut(index + i, probe);
+
+    if (slot->State == OAHashTable::OAHTSlot::UNOCCUPIED) {
+      break;
+    }
+  }
+
+  if (slot == nullptr) {
+    throw OAHashTableException(
+      OAHashTableException::E_NO_MEMORY,
+      "There is not slot available."
+    );
+  }
+
+  slot->State = OAHashTable::OAHTSlot::OCCUPIED;
+  strcpy(slot->Key, Key);
+  slot->Data = Data;
+
+  stats.Count_++;
+}
+
+template<typename T>
 auto OAHashTable<T>::find_slot(const char* Key) const
   -> const SlotSearch<const OAHTSlot> {
   std::size_t index = first_hash_function(Key, stats.TableSize_);
@@ -203,23 +211,28 @@ auto OAHashTable<T>::find_slot_mut(const char* Key)
 }
 
 template<typename T>
-auto OAHashTable<T>::get_slot(std::size_t index) const -> const OAHTSlot& {
+auto OAHashTable<T>::get_slot(std::size_t index, bool probe) const
+  -> const OAHTSlot& {
   std::size_t wrapped_index = index % stats.TableSize_;
   OAHTSlot& slot = slots[wrapped_index];
 
-  slot.probes++;
-  stats.Probes_++;
+  if (probe) {
+    slot.probes++;
+    stats.Probes_++;
+  }
 
   return slot;
 }
 
 template<typename T>
-auto OAHashTable<T>::get_slot_mut(std::size_t index) -> OAHTSlot& {
+auto OAHashTable<T>::get_slot_mut(std::size_t index, bool probe) -> OAHTSlot& {
   std::size_t wrapped_index = index % stats.TableSize_;
   OAHTSlot& slot = slots[wrapped_index];
 
-  slot.probes++;
-  stats.Probes_++;
+  if (probe) {
+    slot.probes++;
+    stats.Probes_++;
+  }
 
   return slot;
 }
@@ -231,24 +244,18 @@ auto OAHashTable<T>::adjust_mark(std::size_t index) -> void {
 
 template<typename T>
 auto OAHashTable<T>::adjust_pack(std::size_t index) -> void {
-  std::vector<std::size_t> reinserts{};
-
-  for (std::size_t i = index + 1; i < stats.TableSize_; i++) {
-    OAHTSlot& slot = get_slot_mut(index + i);
+  for (std::size_t i = 1; i < stats.TableSize_; i++) {
+    OAHTSlot& slot = get_slot_mut(index + i, false);
 
     if (slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
       break;
     }
 
-    if (slot.State == OAHashTable::OAHTSlot::OCCUPIED) {
+    if (slot.State != OAHashTable::OAHTSlot::UNOCCUPIED) {
       slot.State = OAHashTable::OAHTSlot::UNOCCUPIED;
-      reinserts.push_back(index + i);
+      stats.Count_--;
+      insert_inner(slot.Key, slot.Data);
     }
-  }
-
-  for (std::size_t index: reinserts) {
-    OAHTSlot& slot = get_slot_mut(index);
-    insert(slot.Key, slot.Data);
   }
 }
 

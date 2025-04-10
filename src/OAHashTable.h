@@ -168,6 +168,8 @@ private: // Some suggestions (You don't have to use any of this.)
   // making sure the new size is prime by calling GetClosestPrime
   void try_grow_table();
 
+  void insert_inner(const char* Key, const T& Data, bool probe = true);
+
   template<typename S>
   struct SlotSearch {
     std::size_t index{0};
@@ -178,9 +180,9 @@ private: // Some suggestions (You don't have to use any of this.)
 
   const SlotSearch<OAHTSlot> find_slot_mut(const char* Key);
 
-  const OAHTSlot& get_slot(std::size_t index) const;
+  const OAHTSlot& get_slot(std::size_t index, bool = true) const;
 
-  OAHTSlot& get_slot_mut(std::size_t index);
+  OAHTSlot& get_slot_mut(std::size_t index, bool probe = true);
 
   void adjust_mark(std::size_t index);
 
