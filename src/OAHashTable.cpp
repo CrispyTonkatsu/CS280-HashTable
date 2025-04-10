@@ -21,8 +21,6 @@
   #include "OAHashTable.h"
 #endif
 
-// TODO: Add check for repeat inserts
-
 template<typename T>
 OAHashTable<T>::OAHashTable(const OAHTConfig& Config):
     config(Config),
@@ -37,6 +35,24 @@ OAHashTable<T>::OAHashTable(const OAHTConfig& Config):
 
   init_table();
 }
+
+template<typename T>
+OAHashTable<T>::OAHashTable(const OAHashTable& rhs):
+    config(rhs.config),
+    slots(nullptr),
+    first_hash_function(rhs.first_hash_function),
+    second_hash_function(rhs.second_hash_function),
+    delete_function(rhs.delete_function),
+    stats() {}
+
+template<typename T>
+OAHashTable<T>::OAHashTable(OAHashTable&& rhs) {}
+
+template<typename T>
+auto OAHashTable<T>::operator=(const OAHashTable& rhs) -> OAHashTable& {}
+
+template<typename T>
+auto OAHashTable<T>::operator=(OAHashTable&& rhs) -> OAHashTable& {}
 
 template<typename T>
 OAHashTable<T>::~OAHashTable() {
