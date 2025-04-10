@@ -178,11 +178,33 @@ private: // Some suggestions (You don't have to use any of this.)
 
   const SlotSearch<OAHTSlot> find_slot_mut(const char* Key);
 
-  const OAHTSlot& get_slot(std::size_t index, bool probe = true) const;
+  template<typename S>
+  struct SlotProbe {
+    SlotProbe(std::size_t index, S& slot);
+    std::size_t index;
+    S& slot;
+  };
 
-  OAHTSlot& get_slot_mut(std::size_t index, bool probe = true);
+  const SlotProbe<const OAHTSlot> get_slot(std::size_t index, bool probe = true)
+    const;
+
+  const SlotProbe<OAHTSlot> get_slot_mut(std::size_t index, bool probe = true);
 
   std::size_t use_secondary_hash(const char* Key) const;
+
+  const SlotProbe<const OAHTSlot> get_next_slot_with_index(
+    const char* Key,
+    std::size_t index,
+    std::size_t offset,
+    bool probe = true
+  ) const;
+
+  const SlotProbe<OAHTSlot> get_next_slot_mut_with_index(
+    const char* Key,
+    std::size_t index,
+    std::size_t offset,
+    bool probe = true
+  );
 
   const OAHTSlot& get_next_slot(
     const char* Key,

@@ -15,4 +15,5 @@ add_compile_options(-fdiagnostics-color=always)
 
 # files to compile
 add_executable(driver_c ./src/driver.cpp ./src/Support.cpp)
+add_executable(driver_c_2 ./src/driver2.cpp ./src/Support.cpp)
 add_executable(custom ./src/custom.cpp ./src/Support.cpp)

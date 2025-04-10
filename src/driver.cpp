@@ -58,9 +58,7 @@ void FreePersonRecs() {
 
 void FillPersonRecs() {
   unsigned count = sizeof(PEOPLE) / sizeof(*PEOPLE);
-  // NOTE: Make sure that this is working as intended (ask kishan wtf do you
-  // cast to here)
-  PersonRecs = reinterpret_cast<Person**>(new Person[count]);
+  PersonRecs = new Person*[count];
 
   unsigned index = 0;
   for (unsigned i = 0; i < count; i++) {
@@ -85,9 +83,7 @@ unsigned GetRandomIndex() {
 }
 
 void FillPersonRecs2() {
-  // NOTE: Make sure that this is working as intended (ask kishan wtf do you
-  // cast to here)
-  PersonRecs = reinterpret_cast<Person**>(new Person[MAX_PERSONS]);
+  PersonRecs = new Person*[MAX_PERSONS];
 
   unsigned index = 0;
   for (unsigned i = 0; i < MAX_PERSONS; i++) {
