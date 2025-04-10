@@ -9,9 +9,12 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cmath>
+#include <csignal>
 #include <cstddef>
 #include <cstring>
+#include <utility>
 
 #include "Support.h"
 
@@ -43,16 +46,79 @@ OAHashTable<T>::OAHashTable(const OAHashTable& rhs):
     first_hash_function(rhs.first_hash_function),
     second_hash_function(rhs.second_hash_function),
     delete_function(rhs.delete_function),
-    stats() {}
+    stats(rhs.stats) {
+  slots = new OAHTSlot[rhs.stats.TableSize_];
+
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    OAHTSlot& self = slots[i];
+    const OAHTSlot& other = rhs.slots[i];
+
+    self.Data = other.Data;
+    strcpy(self.Key, other.Key);
+    self.State = other.State;
+  }
+}
 
 template<typename T>
-OAHashTable<T>::OAHashTable(OAHashTable&& rhs) {}
+OAHashTable<T>::OAHashTable(OAHashTable&& rhs):
+    config(rhs.config),
+    slots(std::exchange(rhs.slots, nullptr)),
+    first_hash_function(std::exchange(rhs.first_hash_function, nullptr)),
+    second_hash_function(std::exchange(rhs.second_hash_function, nullptr)),
+    delete_function(std::exchange(rhs.delete_function, nullptr)),
+    stats(std::exchange(rhs.stats, OAHTStats())) {}
 
 template<typename T>
-auto OAHashTable<T>::operator=(const OAHashTable& rhs) -> OAHashTable& {}
+auto OAHashTable<T>::operator=(const OAHashTable& rhs) -> OAHashTable& {
+  if (this == &rhs) {
+    return &this;
+  }
+
+  // Clearing old contents.
+  clear();
+  delete[] slots;
+
+  // Filling with new contents
+  config = rhs.config;
+  first_hash_function = rhs.first_hash_function;
+  second_hash_function = rhs.second_hash_function;
+  delete_function = rhs.delete_function;
+  stats = rhs.stats;
+
+  slots = new OAHTSlot[stats.TableSize_];
+
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    OAHTSlot& self = slots[i];
+    const OAHTSlot& other = rhs.slots[i];
+
+    self.Data = other.Data;
+    strcpy(self.Key, other.Key);
+    self.State = other.State;
+  }
+
+  return *this;
+}
 
 template<typename T>
-auto OAHashTable<T>::operator=(OAHashTable&& rhs) -> OAHashTable& {}
+auto OAHashTable<T>::operator=(OAHashTable&& rhs) -> OAHashTable& {
+  if (this == &rhs) {
+    return &this;
+  }
+
+  // Clearing old contents.
+  clear();
+  delete[] slots;
+
+  // Filling with new contents
+  config = rhs.config;
+  slots = std::exchange(rhs.slots, nullptr);
+  first_hash_function = std::exchange(rhs.first_hash_function, nullptr);
+  second_hash_function = std::exchange(rhs.second_hash_function, nullptr);
+  delete_function = std::exchange(rhs.delete_function, nullptr);
+  stats = std::exchange(rhs.stats, OAHTStats());
+
+  return *this;
+}
 
 template<typename T>
 OAHashTable<T>::~OAHashTable() {
