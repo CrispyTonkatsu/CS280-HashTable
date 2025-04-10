@@ -230,99 +230,63 @@ Items: 30, TableSize: 47
 Load factor: 0.638
 
 ==================== TestSimpleDeletePresent ====================
-Slot:   0, Key: 111001 (0)
-Slot:   1, Key: 106001 (1)
-Slot:   2, Key: *** Empty ***
-Slot:   3, Key: 107001 (3)
-Slot:   4, Key: *** Empty ***
+Slot:   0, Key: 104001 (0)
+Slot:   1, Key: 107001 (1)
+Slot:   2, Key: 111001 (8)
+Slot:   3, Key: 102001 (3)
+Slot:   4, Key: 105001 (4)
 Slot:   5, Key: 108001 (5)
-Slot:   6, Key: *** Empty ***
-Slot:   7, Key: 109001 (7)
-Slot:   8, Key: *** Empty ***
-Slot:   9, Key: *** Empty ***
-Slot:  10, Key: *** Empty ***
-Slot:  11, Key: *** Empty ***
-Slot:  12, Key: *** Empty ***
-Slot:  13, Key: *** Empty ***
-Slot:  14, Key: 101001 (14)
-Slot:  15, Key: *** Empty ***
-Slot:  16, Key: 102001 (16)
-Slot:  17, Key: *** Empty ***
-Slot:  18, Key: 103001 (18)
-Slot:  19, Key: *** Empty ***
-Slot:  20, Key: 104001 (20)
-Slot:  21, Key: 110001 (21)
-Slot:  22, Key: 105001 (22)
-Number of probes: 23
-Number of expansions: 1
-Items: 11, TableSize: 23
-Load factor: 0.478
+Slot:   6, Key: 110001 (4)
+Slot:   7, Key: 103001 (7)
+Slot:   8, Key: 106001 (8)
+Slot:   9, Key: 109001 (9)
+Slot:  10, Key: 101001 (10)
+Number of probes: 18
+Number of expansions: 0
+Items: 11, TableSize: 11
+Load factor: 1
 Key:   106001, Name:       Smalls,        Derek    Salary:  80000, Years: 10
-Slot:   0, Key: 111001 (0)
-Slot:   1, Key: *** Empty ***
+Slot:   0, Key: 104001 (0)
+Slot:   1, Key: 107001 (1)
 Slot:   2, Key: *** Empty ***
-Slot:   3, Key: 107001 (3)
-Slot:   4, Key: *** Empty ***
+Slot:   3, Key: 102001 (3)
+Slot:   4, Key: 105001 (4)
 Slot:   5, Key: 108001 (5)
-Slot:   6, Key: *** Empty ***
-Slot:   7, Key: 109001 (7)
-Slot:   8, Key: *** Empty ***
-Slot:   9, Key: *** Empty ***
-Slot:  10, Key: *** Empty ***
-Slot:  11, Key: *** Empty ***
-Slot:  12, Key: *** Empty ***
-Slot:  13, Key: *** Empty ***
-Slot:  14, Key: 101001 (14)
-Slot:  15, Key: *** Empty ***
-Slot:  16, Key: 102001 (16)
-Slot:  17, Key: *** Empty ***
-Slot:  18, Key: 103001 (18)
-Slot:  19, Key: *** Empty ***
-Slot:  20, Key: 104001 (20)
-Slot:  21, Key: 110001 (21)
-Slot:  22, Key: 105001 (22)
-Number of probes: 25
-Number of expansions: 1
-Items: 10, TableSize: 23
-Load factor: 0.435
+Slot:   6, Key: 110001 (4)
+Slot:   7, Key: 103001 (7)
+Slot:   8, Key: 111001 (8)
+Slot:   9, Key: 109001 (9)
+Slot:  10, Key: 101001 (10)
+Number of probes: 32
+Number of expansions: 0
+Items: 10, TableSize: 11
+Load factor: 0.909
 
 ==================== TestSimpleDeleteMissing ====================
-Slot:   0, Key: 111001 (0)
-Slot:   1, Key: 106001 (1)
-Slot:   2, Key: *** Empty ***
-Slot:   3, Key: 107001 (3)
-Slot:   4, Key: *** Empty ***
+Slot:   0, Key: 104001 (0)
+Slot:   1, Key: 107001 (1)
+Slot:   2, Key: 111001 (8)
+Slot:   3, Key: 102001 (3)
+Slot:   4, Key: 105001 (4)
 Slot:   5, Key: 108001 (5)
-Slot:   6, Key: *** Empty ***
-Slot:   7, Key: 109001 (7)
-Slot:   8, Key: *** Empty ***
-Slot:   9, Key: *** Empty ***
-Slot:  10, Key: *** Empty ***
-Slot:  11, Key: *** Empty ***
-Slot:  12, Key: *** Empty ***
-Slot:  13, Key: *** Empty ***
-Slot:  14, Key: 101001 (14)
-Slot:  15, Key: *** Empty ***
-Slot:  16, Key: 102001 (16)
-Slot:  17, Key: *** Empty ***
-Slot:  18, Key: 103001 (18)
-Slot:  19, Key: *** Empty ***
-Slot:  20, Key: 104001 (20)
-Slot:  21, Key: 110001 (21)
-Slot:  22, Key: 105001 (22)
-Number of probes: 23
-Number of expansions: 1
-Items: 11, TableSize: 23
-Load factor: 0.478
+Slot:   6, Key: 110001 (4)
+Slot:   7, Key: 103001 (7)
+Slot:   8, Key: 106001 (8)
+Slot:   9, Key: 109001 (9)
+Slot:  10, Key: 101001 (10)
+Number of probes: 18
+Number of expansions: 0
+Items: 11, TableSize: 11
+Load factor: 1
 Key 999999 not found. errno: 0, Item not found in table.
 
 
 errno: 0, Key not in table.
 
-Number of probes: 27
-Number of expansions: 1
-Items: 11, TableSize: 23
-Load factor: 0.478
+Number of probes: 40
+Number of expansions: 0
+Items: 11, TableSize: 11
+Load factor: 1
 
 ==================== TestSimpleDispose ====================
 Number of probes: 18
@@ -340,64 +304,50 @@ Slot:   0, Key: *** Empty ***
 Slot:   1, Key: 101001 (1)
 Slot:   2, Key: 102001 (1)
 ========================
-Slot:   0, Key: *** Empty ***
+Slot:   0, Key: 103001 (1)
 Slot:   1, Key: 101001 (1)
 Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
-Slot:   4, Key: *** Empty ***
-Slot:   5, Key: *** Empty ***
-Slot:   6, Key: *** Empty ***
 ========================
 Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
+Slot:   1, Key: 103001 (1)
+Slot:   2, Key: 101001 (1)
+Slot:   3, Key: 102001 (1)
 Slot:   4, Key: 104001 (1)
 Slot:   5, Key: *** Empty ***
 Slot:   6, Key: *** Empty ***
 ========================
 Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
+Slot:   1, Key: 103001 (1)
+Slot:   2, Key: 101001 (1)
+Slot:   3, Key: 102001 (1)
 Slot:   4, Key: 104001 (1)
 Slot:   5, Key: 105001 (1)
 Slot:   6, Key: *** Empty ***
 ========================
 Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
+Slot:   1, Key: 103001 (1)
+Slot:   2, Key: 101001 (1)
+Slot:   3, Key: 102001 (1)
+Slot:   4, Key: 104001 (1)
+Slot:   5, Key: 105001 (1)
+Slot:   6, Key: 106001 (1)
+========================
+Slot:   0, Key: 107001 (1)
+Slot:   1, Key: 103001 (1)
+Slot:   2, Key: 101001 (1)
+Slot:   3, Key: 102001 (1)
 Slot:   4, Key: 104001 (1)
 Slot:   5, Key: 105001 (1)
 Slot:   6, Key: 106001 (1)
 ========================
 Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
-Slot:   4, Key: 104001 (1)
-Slot:   5, Key: 105001 (1)
-Slot:   6, Key: 106001 (1)
-Slot:   7, Key: 107001 (1)
-Slot:   8, Key: *** Empty ***
-Slot:   9, Key: *** Empty ***
-Slot:  10, Key: *** Empty ***
-Slot:  11, Key: *** Empty ***
-Slot:  12, Key: *** Empty ***
-Slot:  13, Key: *** Empty ***
-Slot:  14, Key: *** Empty ***
-Slot:  15, Key: *** Empty ***
-Slot:  16, Key: *** Empty ***
-========================
-Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
-Slot:   4, Key: 104001 (1)
-Slot:   5, Key: 105001 (1)
-Slot:   6, Key: 106001 (1)
-Slot:   7, Key: 107001 (1)
+Slot:   1, Key: 107001 (1)
+Slot:   2, Key: 103001 (1)
+Slot:   3, Key: 101001 (1)
+Slot:   4, Key: 102001 (1)
+Slot:   5, Key: 104001 (1)
+Slot:   6, Key: 105001 (1)
+Slot:   7, Key: 106001 (1)
 Slot:   8, Key: 108001 (1)
 Slot:   9, Key: *** Empty ***
 Slot:  10, Key: *** Empty ***
@@ -409,13 +359,13 @@ Slot:  15, Key: *** Empty ***
 Slot:  16, Key: *** Empty ***
 ========================
 Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
-Slot:   4, Key: 104001 (1)
-Slot:   5, Key: 105001 (1)
-Slot:   6, Key: 106001 (1)
-Slot:   7, Key: 107001 (1)
+Slot:   1, Key: 107001 (1)
+Slot:   2, Key: 103001 (1)
+Slot:   3, Key: 101001 (1)
+Slot:   4, Key: 102001 (1)
+Slot:   5, Key: 104001 (1)
+Slot:   6, Key: 105001 (1)
+Slot:   7, Key: 106001 (1)
 Slot:   8, Key: 108001 (1)
 Slot:   9, Key: 109001 (1)
 Slot:  10, Key: *** Empty ***
@@ -427,13 +377,13 @@ Slot:  15, Key: *** Empty ***
 Slot:  16, Key: *** Empty ***
 ========================
 Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
-Slot:   4, Key: 104001 (1)
-Slot:   5, Key: 105001 (1)
-Slot:   6, Key: 106001 (1)
-Slot:   7, Key: 107001 (1)
+Slot:   1, Key: 107001 (1)
+Slot:   2, Key: 103001 (1)
+Slot:   3, Key: 101001 (1)
+Slot:   4, Key: 102001 (1)
+Slot:   5, Key: 104001 (1)
+Slot:   6, Key: 105001 (1)
+Slot:   7, Key: 106001 (1)
 Slot:   8, Key: 108001 (1)
 Slot:   9, Key: 109001 (1)
 Slot:  10, Key: 110001 (1)
@@ -445,13 +395,13 @@ Slot:  15, Key: *** Empty ***
 Slot:  16, Key: *** Empty ***
 ========================
 Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
-Slot:   4, Key: 104001 (1)
-Slot:   5, Key: 105001 (1)
-Slot:   6, Key: 106001 (1)
-Slot:   7, Key: 107001 (1)
+Slot:   1, Key: 107001 (1)
+Slot:   2, Key: 103001 (1)
+Slot:   3, Key: 101001 (1)
+Slot:   4, Key: 102001 (1)
+Slot:   5, Key: 104001 (1)
+Slot:   6, Key: 105001 (1)
+Slot:   7, Key: 106001 (1)
 Slot:   8, Key: 108001 (1)
 Slot:   9, Key: 109001 (1)
 Slot:  10, Key: 110001 (1)
@@ -462,13 +412,13 @@ Slot:  14, Key: *** Empty ***
 Slot:  15, Key: *** Empty ***
 Slot:  16, Key: *** Empty ***
 Slot:   0, Key: *** Empty ***
-Slot:   1, Key: 101001 (1)
-Slot:   2, Key: 102001 (1)
-Slot:   3, Key: 103001 (1)
-Slot:   4, Key: 104001 (1)
-Slot:   5, Key: 105001 (1)
-Slot:   6, Key: 106001 (1)
-Slot:   7, Key: 107001 (1)
+Slot:   1, Key: 107001 (1)
+Slot:   2, Key: 103001 (1)
+Slot:   3, Key: 101001 (1)
+Slot:   4, Key: 102001 (1)
+Slot:   5, Key: 104001 (1)
+Slot:   6, Key: 105001 (1)
+Slot:   7, Key: 106001 (1)
 Slot:   8, Key: 108001 (1)
 Slot:   9, Key: 109001 (1)
 Slot:  10, Key: 110001 (1)
@@ -478,7 +428,7 @@ Slot:  13, Key: *** Empty ***
 Slot:  14, Key: *** Empty ***
 Slot:  15, Key: *** Empty ***
 Slot:  16, Key: *** Empty ***
-Number of probes: 90
+Number of probes: 100
 Number of expansions: 2
 Items: 11, TableSize: 17
 Load factor: 0.647
