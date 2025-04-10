@@ -12,9 +12,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
-#include <iostream>
-#include <ostream>
-#include <vector>
 
 #define OAHASHTABLE_CPP
 
@@ -115,7 +112,7 @@ auto OAHashTable<T>::try_grow_table() -> void {
   const float load_factor =
     static_cast<float>(stats.Count_ + 1) / static_cast<float>(stats.TableSize_);
 
-  if (load_factor < config.MaxLoadFactor_) {
+  if (load_factor <= config.MaxLoadFactor_) {
     return;
   }
 

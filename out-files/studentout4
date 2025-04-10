@@ -1,0 +1,26 @@
+
+==================== TestSimpleDeleteMissing ====================
+Slot:   0, Key: 104001 (0)
+Slot:   1, Key: 107001 (1)
+Slot:   2, Key: 111001 (8)
+Slot:   3, Key: 102001 (3)
+Slot:   4, Key: 105001 (4)
+Slot:   5, Key: 108001 (5)
+Slot:   6, Key: 110001 (4)
+Slot:   7, Key: 103001 (7)
+Slot:   8, Key: 106001 (8)
+Slot:   9, Key: 109001 (9)
+Slot:  10, Key: 101001 (10)
+Number of probes: 18
+Number of expansions: 0
+Items: 11, TableSize: 11
+Load factor: 1
+Key 999999 not found. errno: 0, Item not found in table.
+
+
+errno: 0, Key not in table.
+
+Number of probes: 40
+Number of expansions: 0
+Items: 11, TableSize: 11
+Load factor: 1

@@ -1054,14 +1054,16 @@ int main(int argc, char** argv) {
       TestDoubleHashing(&HashingFuncs[PJW], &HashingFuncs[SIMPLE]);
       break;
 
-    default:
+    case 14:
       TestALot(&HashingFuncs[SIMPLE], &HashingFuncs[NONE]);
       TestSimpleGrow1();
       TestSimpleDeletePresent();
       TestSimpleDeleteMissing();
       TestSimpleDispose();
       TestInsertConstant();
+      break;
 
+    case 15:
       TestALot(&HashingFuncs[PJW], &HashingFuncs[RS]);
       TestSimpleInsert1();
       TestSimpleInsert2();
