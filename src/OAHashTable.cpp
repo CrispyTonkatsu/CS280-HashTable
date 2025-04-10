@@ -146,6 +146,8 @@ auto OAHashTable<T>::try_grow_table() -> void {
     }
   }
 
+  delete[] old_slots;
+
   stats.Expansions_++;
 }
 
@@ -251,7 +253,7 @@ auto OAHashTable<T>::find_slot_mut(const char* Key)
 template<typename T>
 template<typename S>
 OAHashTable<T>::SlotProbe<S>::SlotProbe(std::size_t index, S& slot):
-    index(index), slot(slot){};
+    index(index), slot(slot) {}
 
 template<typename T>
 auto OAHashTable<T>::get_slot(std::size_t index, bool probe) const
@@ -396,7 +398,7 @@ OAHTStats::OAHTStats():
     Probes_(0),
     Expansions_(0),
     PrimaryHashFunc_(0),
-    SecondaryHashFunc_(0) {};
+    SecondaryHashFunc_(0) {}
 
 // Config stuff
 
@@ -424,7 +426,7 @@ OAHashTableException::OAHashTableException(
   int ErrCode,
   const std::string& Message
 ):
-    error_code_(ErrCode), message_(Message) {};
+    error_code_(ErrCode), message_(Message) {}
 
 OAHashTableException::~OAHashTableException() {}
 
