@@ -1,0 +1,29 @@
+
+==================== TestSimpleInsert2 ====================
+Slot:   0, Key: 108001 (0:3)
+Slot:   1, Key: *** Empty ***
+Slot:   2, Key: *** Empty ***
+Slot:   3, Key: 104001 (3:19)
+Slot:   4, Key: *** Empty ***
+Slot:   5, Key: 109001 (5:10)
+Slot:   6, Key: *** Empty ***
+Slot:   7, Key: 111001 (0:7)
+Slot:   8, Key: 105001 (8:4)
+Slot:   9, Key: *** Empty ***
+Slot:  10, Key: *** Empty ***
+Slot:  11, Key: 101001 (11:20)
+Slot:  12, Key: *** Empty ***
+Slot:  13, Key: 106001 (13:11)
+Slot:  14, Key: *** Empty ***
+Slot:  15, Key: *** Empty ***
+Slot:  16, Key: 102001 (16:5)
+Slot:  17, Key: 110001 (18:22)
+Slot:  18, Key: 107001 (18:18)
+Slot:  19, Key: *** Empty ***
+Slot:  20, Key: *** Empty ***
+Slot:  21, Key: 103001 (21:12)
+Slot:  22, Key: *** Empty ***
+Number of probes: 28
+Number of expansions: 1
+Items: 11, TableSize: 23
+Load factor: 0.478

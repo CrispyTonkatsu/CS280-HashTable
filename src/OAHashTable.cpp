@@ -12,6 +12,10 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
+#include <iostream>
+#include <ostream>
+
+#include "Support.h"
 
 #define OAHASHTABLE_CPP
 
@@ -145,7 +149,7 @@ auto OAHashTable<T>::insert_inner(const char* Key, const T& Data, bool probe)
   OAHTSlot* slot = nullptr;
 
   for (std::size_t i = 0; i < stats.TableSize_; i++) {
-    slot = &get_slot_mut(index + i, probe);
+    slot = &get_next_slot_mut(Key, index, i, probe);
 
     if (slot->State == OAHashTable::OAHTSlot::UNOCCUPIED) {
       break;
@@ -172,7 +176,7 @@ auto OAHashTable<T>::find_slot(const char* Key) const
   std::size_t index = first_hash_function(Key, stats.TableSize_);
 
   for (std::size_t i = 0; i < stats.TableSize_; i++) {
-    const OAHTSlot& slot = get_slot(index + i);
+    const OAHTSlot& slot = get_next_slot(Key, index, i);
 
     if (slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
       break;
@@ -232,6 +236,59 @@ auto OAHashTable<T>::get_slot_mut(std::size_t index, bool probe) -> OAHTSlot& {
   }
 
   return slot;
+}
+
+template<typename T>
+auto OAHashTable<T>::use_secondary_hash(const char* Key) const -> std::size_t {
+  if (second_hash_function == nullptr) {
+    return 0;
+  }
+
+  return second_hash_function(Key, stats.TableSize_ - 1) + 1;
+}
+
+template<typename T>
+auto OAHashTable<T>::get_next_slot(
+  const char* Key,
+  std::size_t index,
+  std::size_t offset,
+  bool probe
+) const -> const OAHTSlot& {
+  std::size_t next = index;
+
+  if (second_hash_function != nullptr) {
+
+    if (offset != 0) {
+      next += offset * use_secondary_hash(Key);
+    }
+
+  } else {
+    next += offset;
+  }
+
+  return get_slot(next, probe);
+}
+
+template<typename T>
+auto OAHashTable<T>::get_next_slot_mut(
+  const char* Key,
+  std::size_t index,
+  std::size_t offset,
+  bool probe
+) -> OAHTSlot& {
+  std::size_t next = index;
+
+  if (second_hash_function != nullptr) {
+
+    if (offset != 0) {
+      next += offset * use_secondary_hash(Key);
+    }
+
+  } else {
+    next += offset;
+  }
+
+  return get_slot_mut(next, probe);
 }
 
 template<typename T>

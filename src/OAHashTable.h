@@ -10,13 +10,11 @@
 #pragma once
 
 //---------------------------------------------------------------------------
-#include <cstddef>
 #include <string>
 
 #ifndef OAHASHTABLEH
   #define OAHASHTABLEH
-  //---------------------------------------------------------------------------
-  #include "Support.h"
+//---------------------------------------------------------------------------
 
 /*!
 client-provided hash function: takes a key and table size,
@@ -180,9 +178,25 @@ private: // Some suggestions (You don't have to use any of this.)
 
   const SlotSearch<OAHTSlot> find_slot_mut(const char* Key);
 
-  const OAHTSlot& get_slot(std::size_t index, bool = true) const;
+  const OAHTSlot& get_slot(std::size_t index, bool probe = true) const;
 
   OAHTSlot& get_slot_mut(std::size_t index, bool probe = true);
+
+  std::size_t use_secondary_hash(const char* Key) const;
+
+  const OAHTSlot& get_next_slot(
+    const char* Key,
+    std::size_t index,
+    std::size_t offset,
+    bool probe = true
+  ) const;
+
+  OAHTSlot& get_next_slot_mut(
+    const char* Key,
+    std::size_t index,
+    std::size_t offset,
+    bool probe = true
+  );
 
   void adjust_mark(std::size_t index);
 
