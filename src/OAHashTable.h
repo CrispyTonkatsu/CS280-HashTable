@@ -159,7 +159,7 @@ public:
 private: // Some suggestions (You don't have to use any of this.)
 
   // Initialize the table after an allocation
-  void init_table();
+  void init_table(bool reset_probes = false);
 
   // Expands the table when the load factor reaches a certain point
   // (greater than MaxLoadFactor) Grows the table by GrowthFactor,

@@ -108,12 +108,15 @@ auto OAHashTable<T>::GetTable() const -> const OAHTSlot* {
 }
 
 template<typename T>
-auto OAHashTable<T>::init_table() -> void {
+auto OAHashTable<T>::init_table(bool reset_probes) -> void {
   for (std::size_t i = 0; i < stats.TableSize_; i++) {
     slots[i].Key[0] = '\0';
     slots[i].Data = T();
     slots[i].State = OAHashTable::OAHTSlot::UNOCCUPIED;
-    slots[i].probes = 0;
+
+    if (reset_probes) {
+      slots[i].probes = 0;
+    }
   }
 }
 
@@ -135,7 +138,7 @@ auto OAHashTable<T>::try_grow_table() -> void {
 
   OAHTSlot* old_slots = slots;
   slots = new OAHTSlot[new_size];
-  init_table();
+  init_table(true);
 
   for (std::size_t i = 0; i < old_size; i++) {
     if (old_slots[i].State == OAHashTable::OAHTSlot::OCCUPIED) {
@@ -158,6 +161,12 @@ auto OAHashTable<T>::insert_inner(const char* Key, const T& Data, bool probe)
     slot = &get_next_slot_mut(Key, index, i, probe);
 
     if (slot->State == OAHashTable::OAHTSlot::OCCUPIED) {
+      if (strcmp(slot->Key, Key) == 0) {
+        throw OAHashTableException(
+          OAHashTableException::E_DUPLICATE,
+          "There is a duplicate item in the list."
+        );
+      }
       continue;
     }
 
@@ -165,9 +174,14 @@ auto OAHashTable<T>::insert_inner(const char* Key, const T& Data, bool probe)
       break;
     }
 
-    for (std::size_t j = i; j < stats.TableSize_ - (i - 1); j++) {
+    for (std::size_t j = i + 1; j < stats.TableSize_; j++) {
       const OAHTSlot& next_slot = get_next_slot(Key, index, j, probe);
 
+      if (next_slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
+        break;
+      }
+
+      // TODO: This exception is not being thrown, idk why
       if (strcmp(next_slot.Key, Key) == 0) {
         throw OAHashTableException(
           OAHashTableException::E_DUPLICATE,
@@ -355,11 +369,9 @@ auto OAHashTable<T>::adjust_pack(std::size_t index) -> void {
       break;
     }
 
-    if (slot.State != OAHashTable::OAHTSlot::UNOCCUPIED) {
-      slot.State = OAHashTable::OAHTSlot::UNOCCUPIED;
-      stats.Count_--;
-      insert_inner(slot.Key, slot.Data);
-    }
+    slot.State = OAHashTable::OAHTSlot::UNOCCUPIED;
+    stats.Count_--;
+    insert_inner(slot.Key, slot.Data);
   }
 }
 
