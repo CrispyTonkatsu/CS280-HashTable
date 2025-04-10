@@ -10,13 +10,17 @@
 #pragma once
 
 #include <cmath>
+#include <cstddef>
 #include <cstring>
+#include <vector>
 
 #define OAHASHTABLE_CPP
 
 #ifndef OAHASHTABLEH
   #include "OAHashTable.h"
 #endif
+
+// TODO: Add check for repeat inserts
 
 template<typename T>
 OAHashTable<T>::OAHashTable(const OAHTConfig& Config):
@@ -35,7 +39,8 @@ OAHashTable<T>::OAHashTable(const OAHTConfig& Config):
 
 template<typename T>
 OAHashTable<T>::~OAHashTable() {
-  // TODO: Impelement destructor
+  clear();
+  delete[] slots;
 }
 
 template<typename T>
@@ -69,34 +74,42 @@ auto OAHashTable<T>::insert(const char* Key, const T& Data) -> void {
 
 template<typename T>
 auto OAHashTable<T>::remove(const char* Key) -> void {
-  // TODO: Impelement deletion
+  SlotSearch<OAHTSlot> search = find_slot_mut(Key);
+
+  if (search.slot == nullptr) {
+    throw OAHashTableException(
+      OAHashTableException::E_ITEM_NOT_FOUND,
+      "Key not in table."
+    );
+  }
+
+  delete_slot(*search.slot);
+
+  switch (config.DeletionPolicy_) {
+    case OAHTDeletionPolicy::MARK: adjust_mark(search.index); break;
+    case OAHTDeletionPolicy::PACK: adjust_pack(search.index); break;
+  }
 }
 
 template<typename T>
 auto OAHashTable<T>::find(const char* Key) const -> const T& {
-  std::size_t index = first_hash_function(Key, stats.TableSize_);
+  SlotSearch<const OAHTSlot> search{find_slot(Key)};
 
-  for (std::size_t i = 0; i < stats.TableSize_; i++) {
-    const OAHTSlot& slot = get_slot(index + i);
-
-    if (slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
-      break;
-    }
-
-    if (strcmp(slot.Key, Key) == 0) {
-      return slot.Data;
-    }
+  if (search.slot == nullptr) {
+    throw OAHashTableException(
+      OAHashTableException::E_ITEM_NOT_FOUND,
+      "Item not found in table."
+    );
   }
 
-  throw OAHashTableException(
-    OAHashTableException::E_ITEM_NOT_FOUND,
-    "Item not found in table."
-  );
+  return search.slot->Data;
 }
 
 template<typename T>
 auto OAHashTable<T>::clear() -> void {
-  // TODO: Impelement clearing
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    delete_slot(get_slot_mut(i));
+  }
 }
 
 template<typename T>
@@ -137,6 +150,7 @@ auto OAHashTable<T>::try_grow_table() -> void {
 
   OAHTSlot* old_slots = slots;
   slots = new OAHTSlot[new_size];
+  init_table();
 
   for (std::size_t i = 0; i < old_size; i++) {
     if (old_slots[i].State == OAHashTable::OAHTSlot::OCCUPIED) {
@@ -148,8 +162,44 @@ auto OAHashTable<T>::try_grow_table() -> void {
 }
 
 template<typename T>
-auto OAHashTable<T>::index_of(const char* Key, OAHTSlot*& Slot) const -> int {
-  // TODO: Table indexing
+auto OAHashTable<T>::find_slot(const char* Key) const
+  -> const SlotSearch<const OAHTSlot> {
+  std::size_t index = first_hash_function(Key, stats.TableSize_);
+
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    const OAHTSlot& slot = get_slot(index + i);
+
+    if (slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
+      break;
+    }
+
+    if (strcmp(slot.Key, Key) == 0) {
+      std::size_t wrapped_index = (index + i) % stats.TableSize_;
+      return SlotSearch<const OAHTSlot>{wrapped_index, &slot};
+    }
+  }
+
+  return SlotSearch<const OAHTSlot>{};
+}
+
+template<typename T>
+auto OAHashTable<T>::find_slot_mut(const char* Key)
+  -> const SlotSearch<OAHTSlot> {
+  std::size_t index = first_hash_function(Key, stats.TableSize_);
+
+  for (std::size_t i = 0; i < stats.TableSize_; i++) {
+    OAHTSlot& slot = get_slot_mut(index + i);
+
+    if (slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
+      break;
+    }
+
+    if (strcmp(slot.Key, Key) == 0) {
+      return SlotSearch<OAHTSlot>{index, &slot};
+    }
+  }
+
+  return SlotSearch<OAHTSlot>{};
 }
 
 template<typename T>
@@ -172,6 +222,48 @@ auto OAHashTable<T>::get_slot_mut(std::size_t index) -> OAHTSlot& {
   stats.Probes_++;
 
   return slot;
+}
+
+template<typename T>
+auto OAHashTable<T>::adjust_mark(std::size_t index) -> void {
+  slots[index].State = OAHashTable::OAHTSlot::DELETED;
+}
+
+template<typename T>
+auto OAHashTable<T>::adjust_pack(std::size_t index) -> void {
+  std::vector<std::size_t> reinserts{};
+
+  for (std::size_t i = index + 1; i < stats.TableSize_; i++) {
+    OAHTSlot& slot = get_slot_mut(index + i);
+
+    if (slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
+      break;
+    }
+
+    if (slot.State == OAHashTable::OAHTSlot::OCCUPIED) {
+      slot.State = OAHashTable::OAHTSlot::UNOCCUPIED;
+      reinserts.push_back(index + i);
+    }
+  }
+
+  for (std::size_t index: reinserts) {
+    OAHTSlot& slot = get_slot_mut(index);
+    insert(slot.Key, slot.Data);
+  }
+}
+
+template<typename T>
+auto OAHashTable<T>::delete_slot(OAHTSlot& slot) -> void {
+  if (slot.State == OAHashTable::OAHTSlot::UNOCCUPIED) {
+    return;
+  }
+
+  if (delete_function != nullptr) {
+    delete_function(slot.Data);
+  }
+
+  slot.State = OAHashTable::OAHTSlot::UNOCCUPIED;
+  stats.Count_--;
 }
 
 // Stats stuff

@@ -11,10 +11,11 @@
 
 //---------------------------------------------------------------------------
 #include <cstddef>
+#include <string>
+
 #ifndef OAHASHTABLEH
   #define OAHASHTABLEH
   //---------------------------------------------------------------------------
-  #include <string>
   #include "Support.h"
 
 /*!
@@ -122,15 +123,21 @@ public:
     };
 
     char Key[MAX_KEYLEN]{'\0'};       //!< Key is a string
-    T Data;                           //!< Client data
+    T Data{};                         //!< Client data
     OAHTSlot_State State{UNOCCUPIED}; //!< The state of the slot
     int probes{0};                    //!< For testing
   };
 
-  // TODO: Rule of 5
-
   OAHashTable(const OAHTConfig& Config); // Constructor
   ~OAHashTable();                        // Destructor
+
+  // TODO: Rule of 5
+
+  OAHashTable(const OAHashTable& rhs) = delete;
+  OAHashTable(OAHashTable&& rhs) = delete;
+
+  OAHashTable& operator=(const OAHashTable& rhs) = delete;
+  OAHashTable& operator=(OAHashTable&& rhs) = delete;
 
   // Insert a key/data pair into table. Throws an exception if the
   // insertion is unsuccessful.
@@ -161,15 +168,25 @@ private: // Some suggestions (You don't have to use any of this.)
   // making sure the new size is prime by calling GetClosestPrime
   void try_grow_table();
 
-  // Workhorse method to locate an item (if it exists)
-  // Returns the index of the item in the table
-  // Sets Slot to point to the slot in the table where it belongs
-  // Returns -1 if it's not in the table
-  int index_of(const char* Key, OAHTSlot*& Slot) const;
+  template<typename S>
+  struct SlotSearch {
+    std::size_t index{0};
+    S* slot{nullptr};
+  };
+
+  const SlotSearch<const OAHTSlot> find_slot(const char* Key) const;
+
+  const SlotSearch<OAHTSlot> find_slot_mut(const char* Key);
 
   const OAHTSlot& get_slot(std::size_t index) const;
 
   OAHTSlot& get_slot_mut(std::size_t index);
+
+  void adjust_mark(std::size_t index);
+
+  void adjust_pack(std::size_t index);
+
+  void delete_slot(OAHTSlot& slot);
 
   OAHTConfig config{};
 

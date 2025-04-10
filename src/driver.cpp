@@ -58,7 +58,9 @@ void FreePersonRecs() {
 
 void FillPersonRecs() {
   unsigned count = sizeof(PEOPLE) / sizeof(*PEOPLE);
-  PersonRecs = (Person**)new Person[count];
+  // NOTE: Make sure that this is working as intended (ask kishan wtf do you
+  // cast to here)
+  PersonRecs = reinterpret_cast<Person**>(new Person[count]);
 
   unsigned index = 0;
   for (unsigned i = 0; i < count; i++) {
@@ -83,14 +85,16 @@ unsigned GetRandomIndex() {
 }
 
 void FillPersonRecs2() {
-  PersonRecs = (Person**)new Person[MAX_PERSONS];
+  // NOTE: Make sure that this is working as intended (ask kishan wtf do you
+  // cast to here)
+  PersonRecs = reinterpret_cast<Person**>(new Person[MAX_PERSONS]);
 
   unsigned index = 0;
   for (unsigned i = 0; i < MAX_PERSONS; i++) {
     Person* person = new Person;
     strcpy(person->lastName, PEOPLE[0].lastName);
     strcpy(person->firstName, PEOPLE[0].firstName);
-    person->salary = (float)GetRandom(1000, 20000);
+    person->salary = static_cast<float>(GetRandom(1000, 20000));
     person->years = PEOPLE[0].years;
     PersonRecs[index++] = person;
   }
@@ -292,7 +296,9 @@ void DumpStats(OAHashTable<T>& ht, ostream& os = cout) {
   os << "Items: " << ht.GetStats().Count_
      << ", TableSize: " << ht.GetStats().TableSize_ << endl;
   os << "Load factor: " << setprecision(3)
-     << (double)ht.GetStats().Count_ / (double)ht.GetStats().TableSize_ << endl;
+     << static_cast<double>(ht.GetStats().Count_)
+          / static_cast<double>(ht.GetStats().TableSize_)
+     << endl;
 }
 
 void TestALot(HashData* phd, HashData* shd) {
@@ -465,9 +471,6 @@ void TestALot(HashData* phd, HashData* shd) {
            << endl;
     }
     DumpStats<T>(ht);
-
-    // NOTE: Current Progress
-    return;
 
     // Clear the table
     ht.clear();
@@ -790,7 +793,7 @@ void TestSimpleDeleteMissing() {
   DumpStats<T>(ht);
 }
 
-void FreeSimpleRec(char* rec) { delete[] (char*)rec; }
+void FreeSimpleRec(char* rec) { delete[] static_cast<char*>(rec); }
 
 void TestSimpleDispose() {
   cout << endl
