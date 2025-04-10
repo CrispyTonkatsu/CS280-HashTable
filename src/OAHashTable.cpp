@@ -181,7 +181,6 @@ auto OAHashTable<T>::insert_inner(const char* Key, const T& Data, bool probe)
         break;
       }
 
-      // TODO: This exception is not being thrown, idk why
       if (strcmp(next_slot.Key, Key) == 0) {
         throw OAHashTableException(
           OAHashTableException::E_DUPLICATE,
